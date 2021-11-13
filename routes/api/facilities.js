@@ -74,7 +74,7 @@ router.post(
 
         await facility.save();
 
-        res.json({ facility });
+        res.json(facility);
       } else {
         console.error('Unauthorized action');
         res.status(401).send('Unauthorized action');
