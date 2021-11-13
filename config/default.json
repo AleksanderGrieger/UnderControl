@@ -1,0 +1,6 @@
+{
+  "mongoURI": "mongodb+srv://olek123:olek123@undercontrol.cbjpz.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+  "jwtSecret": "mysecrettoken",
+  "githubClientId": "8efe1f19505fb6dced34",
+  "githubSecret": "ea0e578c746e60d5fb62a58c33999894d449dc1c"
+}
