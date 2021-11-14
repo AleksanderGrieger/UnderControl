@@ -43,10 +43,12 @@ router.get('/:id', async (req, res) => {
 // @access Private
 router.post(
   '/',
-  auth,
   [
-    body('name', 'Name is required').not().isEmpty(),
-    // body('available', 'Availability is required').not().isEmpty(),
+    auth,
+    [
+      body('name', 'Name is required').not().isEmpty(),
+      // body('available', 'Availability is required').not().isEmpty(),
+    ],
   ],
   async (req, res) => {
     const errors = validationResult(req);
