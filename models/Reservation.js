@@ -3,12 +3,12 @@ const mongoose = require('mongoose');
 const ReservationSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'users',
+    ref: 'user',
     required: true,
   },
   facility: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'facilities',
+    ref: 'facility',
     required: true,
   },
   startDate: {
