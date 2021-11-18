@@ -4,6 +4,7 @@ const auth = require('../../middleware/auth');
 const Reservation = require('../../models/Reservation');
 const Facility = require('../../models/Facility');
 const { body, validationResult } = require('express-validator');
+const moment = require('moment');
 
 // @route  GET api/reservations
 // @desc   Get all reservations
@@ -108,7 +109,33 @@ router.post(
     const { facilityName, startDate, endDate } = req.body;
 
     try {
-      const user = await User.findById(req.user.id).select('-password');
+      if (moment(startDate).isBefore(Date.now())) {
+        return res.status(400).json({
+          errors: [
+            {
+              msg: 'Start of reservation can not be before present Date (in the past)',
+            },
+          ],
+        });
+      } else if (moment(endDate).isBefore(startDate)) {
+        return res.status(400).json({
+          errors: [
+            {
+              msg: 'End of reservation can not be before Start of reservation',
+            },
+          ],
+        });
+      } else if (startDate === endDate) {
+        return res.status(400).json({
+          errors: [
+            {
+              msg: 'Start of reservation can not be equal to End of reservation',
+            },
+          ],
+        });
+      }
+
+      // const user = await User.findById(req.user.id).select('-password');
 
       let facility = await Facility.findOne({ name: facilityName });
 
@@ -118,8 +145,32 @@ router.post(
         });
       }
 
-      // let reservation = await Reservation.findOne({ facility: {name: facilityName }, });
+      // let reservation = await Reservation.find({ facility: {name: facilityName }, });
+      let reservations = await Reservation.find({
+        facility: { _id: facility.id },
+      });
 
+      let flag = 0;
+      reservations.forEach((reservation) => {
+        if (
+          moment(reservation.startDate).isBetween(startDate, endDate) ||
+          moment(reservation.endDate).isBetween(startDate, endDate) ||
+          moment(startDate).isBetween(
+            reservation.startDate,
+            reservation.endDate
+          ) ||
+          moment(startDate).isSame(reservation.startDate) ||
+          moment(endDate).isSame(reservation.endDate)
+        ) {
+          flag = 1;
+        }
+      });
+
+      if (flag) {
+        return res.status(400).json({
+          errors: [{ msg: 'Reservation between this dates already exist' }],
+        });
+      }
       reservation = new Reservation({
         user: req.user.id,
         facility: facility.id,
@@ -128,7 +179,6 @@ router.post(
       });
 
       await reservation.save();
-
       res.json(reservation);
     } catch (err) {
       console.log(err.message);
