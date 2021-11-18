@@ -88,13 +88,14 @@ router.get('/user/:userId', async (req, res) => {
 });
 
 // @route  POST api/reservations
-// @desc   Add reservation
-// @access Public
+// @desc   Add reservation (Admin can make reservation for every user)
+// @access Private
 router.post(
   '/',
   [
     auth,
     [
+      body('userEmail'),
       body('facilityName', 'Facility name is required').not().isEmpty(),
       body('startDate', 'Start date is required').not().isEmpty(),
       body('endDate', 'End date is required').not().isEmpty(),
@@ -106,7 +107,7 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { facilityName, startDate, endDate } = req.body;
+    const { userEmail, facilityName, startDate, endDate } = req.body;
 
     try {
       if (moment(startDate).isBefore(Date.now())) {
@@ -135,8 +136,6 @@ router.post(
         });
       }
 
-      // const user = await User.findById(req.user.id).select('-password');
-
       let facility = await Facility.findOne({ name: facilityName });
 
       if (!facility) {
@@ -145,7 +144,6 @@ router.post(
         });
       }
 
-      // let reservation = await Reservation.find({ facility: {name: facilityName }, });
       let reservations = await Reservation.find({
         facility: { _id: facility.id },
       });
@@ -171,12 +169,32 @@ router.post(
           errors: [{ msg: 'Reservation between this dates already exist' }],
         });
       }
-      reservation = new Reservation({
-        user: req.user.id,
-        facility: facility.id,
-        startDate: startDate,
-        endDate: endDate,
-      });
+
+      let user = await User.findOne({ _id: req.user.id });
+
+      if (user.role === 'admin' && userEmail) {
+        let userToReserv = await User.findOne({ email: userEmail });
+
+        if (!userToReserv) {
+          return res.status(400).json({
+            errors: [{ msg: 'User with that email does not exist' }],
+          });
+        }
+
+        reservation = new Reservation({
+          user: userToReserv.id,
+          facility: facility.id,
+          startDate: startDate,
+          endDate: endDate,
+        });
+      } else {
+        reservation = new Reservation({
+          user: req.user.id,
+          facility: facility.id,
+          startDate: startDate,
+          endDate: endDate,
+        });
+      }
 
       await reservation.save();
       res.json(reservation);
