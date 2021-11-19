@@ -5,6 +5,7 @@ const Reservation = require('../../models/Reservation');
 const Facility = require('../../models/Facility');
 const { body, validationResult } = require('express-validator');
 const moment = require('moment');
+const User = require('../../models/User');
 
 // @route  GET api/reservations
 // @desc   Get all reservations
@@ -204,5 +205,50 @@ router.post(
     }
   }
 );
+
+// @route  DELETE api/reservations/:id
+// @desc   Delete reservation by ID
+// @access Private
+router.delete('/:id', auth, async (req, res) => {
+  // const {id} = req.body;
+  try {
+    const user = await User.findById(req.user.id);
+    const reservation = await Reservation.findById(req.params.id);
+
+    if (!reservation) {
+      return res.status(400).json({
+        errors: [
+          {
+            msg: 'Reservation does not exist',
+          },
+        ],
+      });
+    }
+
+    // console.log(user, reservation);
+    // console.log(JSON.stringify(user.id), JSON.stringify(reservation.user));
+
+    if (
+      JSON.stringify(user.id) === JSON.stringify(reservation.user) ||
+      user.role === 'admin'
+    ) {
+      await Reservation.findOneAndRemove({
+        _id: req.params.id,
+      });
+      res.json({ msg: 'Reservation deleted' });
+    } else {
+      return res.status(400).json({
+        errors: [
+          {
+            msg: 'Reservation does not belongs to this User',
+          },
+        ],
+      });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
 
 module.exports = router;
