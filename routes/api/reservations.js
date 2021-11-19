@@ -210,7 +210,6 @@ router.post(
 // @desc   Delete reservation by ID
 // @access Private
 router.delete('/:id', auth, async (req, res) => {
-  // const {id} = req.body;
   try {
     const user = await User.findById(req.user.id);
     const reservation = await Reservation.findById(req.params.id);
@@ -224,9 +223,6 @@ router.delete('/:id', auth, async (req, res) => {
         ],
       });
     }
-
-    // console.log(user, reservation);
-    // console.log(JSON.stringify(user.id), JSON.stringify(reservation.user));
 
     if (
       JSON.stringify(user.id) === JSON.stringify(reservation.user) ||
