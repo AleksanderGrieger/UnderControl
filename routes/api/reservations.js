@@ -68,18 +68,35 @@ router.get('/facility/:facilityName', async (req, res) => {
 
 // @route  GET api/reservations/user/:userId
 // @desc   Get all reservations of specific user by userId
-// @access Public
-router.get('/user/:userId', async (req, res) => {
+// @access Private
+router.get('/user/:userId', auth, async (req, res) => {
   try {
-    const userFromDB = await User.findById(req.params.userId).select(
-      '-password'
-    );
+    const user = await User.findById(req.user.id).select('-password');
+    let reservations;
 
-    const reservations = await Reservation.find({
-      user: userFromDB.id,
-    })
-      .populate('facility')
-      .populate('user', ['_id', 'role', 'name']);
+    if (user.role === 'admin' && req.params.userId) {
+      reservations = await Reservation.find({
+        user: req.params.userId,
+      })
+        .populate('facility')
+        .populate('user', ['_id', 'role', 'name']);
+    } else {
+      reservations = await Reservation.find({
+        user: user.id,
+      })
+        .populate('facility')
+        .populate('user', ['_id', 'role', 'name']);
+    }
+
+    if (!reservations) {
+      return res.status(400).json({
+        errors: [
+          {
+            msg: 'This User does not have any reservation yet',
+          },
+        ],
+      });
+    }
 
     res.json(reservations);
   } catch (err) {
@@ -199,6 +216,147 @@ router.post(
 
       await reservation.save();
       res.json(reservation);
+    } catch (err) {
+      console.log(err.message);
+      res.status(500).send('Server error');
+    }
+  }
+);
+
+// @route  POST api/reservations/:id
+// @desc   Update reservation by ID (Admin can edit reservation for every user)
+// @access Private
+router.post(
+  '/:id',
+  [
+    auth,
+    [
+      body('userEmail'),
+      body('facilityName', 'Facility name is required').not().isEmpty(),
+      body('startDate', 'Start date is required').not().isEmpty(),
+      body('endDate', 'End date is required').not().isEmpty(),
+    ],
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { userEmail, facilityName, startDate, endDate } = req.body;
+
+    try {
+      let reservation = await Reservation.findOne({ _id: req.params.id });
+      if (!reservation) {
+        return res.status(400).json({
+          errors: [
+            {
+              msg: 'Reservation with that ID does not exists',
+            },
+          ],
+        });
+      }
+
+      if (moment(startDate).isBefore(Date.now())) {
+        return res.status(400).json({
+          errors: [
+            {
+              msg: 'Start of reservation can not be before present Date (in the past)',
+            },
+          ],
+        });
+      } else if (moment(endDate).isBefore(startDate)) {
+        return res.status(400).json({
+          errors: [
+            {
+              msg: 'End of reservation can not be before Start of reservation',
+            },
+          ],
+        });
+      } else if (startDate === endDate) {
+        return res.status(400).json({
+          errors: [
+            {
+              msg: 'Start of reservation can not be equal to End of reservation',
+            },
+          ],
+        });
+      }
+      let facility = await Facility.findOne({ name: facilityName });
+      if (!facility) {
+        return res.status(400).json({
+          errors: [{ msg: 'Facility with that name does not exist' }],
+        });
+      }
+
+      let reservations = await Reservation.find({
+        facility: { _id: facility.id },
+      });
+
+      let flag = 0;
+      reservations.forEach((reservationItem) => {
+        // if (reservationItem.id !== req.params.id) {
+        if (reservationItem.id !== reservation.id) {
+          if (
+            moment(reservationItem.startDate).isBetween(startDate, endDate) ||
+            moment(reservationItem.endDate).isBetween(startDate, endDate) ||
+            moment(startDate).isBetween(
+              reservationItem.startDate,
+              reservationItem.endDate
+            ) ||
+            moment(startDate).isSame(reservationItem.startDate) ||
+            moment(endDate).isSame(reservationItem.endDate)
+          ) {
+            flag = 1;
+          }
+        }
+      });
+
+      if (flag) {
+        return res.status(400).json({
+          errors: [{ msg: 'Reservation between this dates already exist' }],
+        });
+      }
+
+      let user = await User.findOne({ _id: req.user.id });
+
+      if (user.role === 'admin' && userEmail) {
+        let userToReserv = await User.findOne({ email: userEmail });
+
+        if (!userToReserv) {
+          return res.status(400).json({
+            errors: [{ msg: 'User with that email does not exist' }],
+          });
+        }
+
+        reservation = await Reservation.findOneAndUpdate(
+          { _id: reservation.id },
+          {
+            $set: {
+              user: userToReserv.id,
+              facility: facility.id,
+              startDate: startDate,
+              endDate: endDate,
+            },
+          },
+          { new: true }
+        );
+      } else {
+        reservation = await Reservation.findOneAndUpdate(
+          { _id: reservation.id },
+          {
+            $set: {
+              user: req.user.id,
+              facility: facility.id,
+              startDate: startDate,
+              endDate: endDate,
+            },
+          },
+          { new: true }
+        );
+      }
+
+      return res.json(reservation);
     } catch (err) {
       console.log(err.message);
       res.status(500).send('Server error');
