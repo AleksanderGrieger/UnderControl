@@ -25,7 +25,7 @@ const Login = () => {
       <form onSubmit={(e) => onSubmit(e)}>
         <input
           type='email'
-          placeholder='Aders Email'
+          placeholder='Adres Email'
           name='email'
           value={email}
           onChange={(e) => onChange(e)}
@@ -33,6 +33,7 @@ const Login = () => {
         <input
           type='password'
           placeholder='Hasło'
+          minLength={6}
           name='password'
           value={password}
           onChange={(e) => onChange(e)}

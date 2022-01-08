@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { register } from '../actions';
 import Button from '../generics/Button';
 import Card from '../generics/Card';
 
 const Register = () => {
   const [formData, setFormData] = useState({
+    name: '',
     email: '',
     password: '',
     password2: '',
   });
 
-  const { email, password, password2 } = formData;
+  const { name, email, password, password2 } = formData;
 
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -20,8 +22,8 @@ const Register = () => {
     if (password !== password2) {
       alert('Password do not match');
     } else {
-      //   register({ name, email, password });
-      console.log(formData);
+      const res = await register({ name, email, password });
+      console.log(res);
     }
   };
 
@@ -29,6 +31,13 @@ const Register = () => {
     <Card size='md'>
       <h1>Rejestracja</h1>
       <form onSubmit={(e) => onSubmit(e)}>
+        <input
+          type='text'
+          placeholder='Imię'
+          name='name'
+          value={name}
+          onChange={(e) => onChange(e)}
+        />
         <input
           type='email'
           placeholder='Aders Email'
