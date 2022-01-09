@@ -1,25 +1,24 @@
 import axios from 'axios';
+// import setAuthToken from '../utils/setAuthToken';
 
-// const config1 = {
-//   headers: {
-//     'Access-Control-Allow-Origin': '*',
-//   },
-// };
 const config = {
   headers: {
     'Content-Type': 'application/json',
   },
 };
-
 const configWithToken = (token) => {
-  //   const config =
-  return {
+  const config = {
     headers: {
-      'Content-Type': 'application/json',
+      //   'Content-Type': 'application/json',
       'x-auth-token': token,
     },
   };
-  //   return token;
+  return config;
+};
+
+// Load User
+export const loadUser = async (token) => {
+  return await getFromApi('/api/auth', configWithToken(token));
 };
 
 const getFromApi = async (path, config = {}) => {
@@ -44,7 +43,16 @@ const postToApi = async (path, body, config = {}) => {
 
 // Register User
 export const register = async (body) => {
-  return await postToApi('/api/users', body, config);
+  const res = await postToApi('/api/users', body, config);
+  console.log(res.token);
+  return await loadUser(res.token);
+};
+
+// Login User
+export const login = async (body) => {
+  const res = await postToApi('/api/auth', body, config);
+  console.log(res.token);
+  return await loadUser(res.token);
 };
 
 //Get All Reservations
