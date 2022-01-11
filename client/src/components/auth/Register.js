@@ -1,12 +1,12 @@
 import React, { useContext, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { register } from '../actions';
+import { AuthContext } from '../AuthContext';
 import Button from '../generics/Button';
 import Card from '../generics/Card';
-import { TokenContext } from '../TokenContext';
 
 const Register = () => {
-  const { token, setToken } = useContext(TokenContext);
+  const { auth, setAuth } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -25,13 +25,11 @@ const Register = () => {
       alert('Password do not match');
     } else {
       const res = await register({ name, email, password });
-      setToken(res);
-    //   console.log(res);
+      await setAuth(res);
     }
   };
 
-  if (token) {
-    // console.log(token, ' - is Authenticated');
+  if (typeof auth === 'string') {
     return <Navigate to='/info' />;
   }
 

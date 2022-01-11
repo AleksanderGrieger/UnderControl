@@ -1,12 +1,12 @@
 import React, { useContext, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { login } from '../actions';
+import { AuthContext } from '../AuthContext';
 import Button from '../generics/Button';
 import Card from '../generics/Card';
-import { TokenContext } from '../TokenContext';
 
 const Login = () => {
-  const { token, setToken } = useContext(TokenContext);
+  const { auth, setAuth } = useContext(AuthContext);
 
   const [formData, setFormData] = useState({
     email: '',
@@ -21,12 +21,10 @@ const Login = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     const res = await login({ email, password });
-    setToken(res);
-    // console.log(formData);
+    await setAuth(res);
   };
 
-  if (token) {
-    // console.log(token, ' - is Authenticated');
+  if (typeof auth === 'string') {
     return <Navigate to='/info' />;
   }
 

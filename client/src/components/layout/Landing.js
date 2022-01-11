@@ -1,13 +1,13 @@
 import React, { useContext } from 'react';
 import { Link, Navigate } from 'react-router-dom';
+import { AuthContext } from '../AuthContext';
 import Button from '../generics/Button';
 import { StyledLanding } from '../styles/Landing.styled';
-import { TokenContext } from '../TokenContext';
 
 const Landing = () => {
-  const { token } = useContext(TokenContext);
+  const { auth } = useContext(AuthContext);
 
-  if (token) {
+  if (typeof auth === 'string') {
     return <Navigate to='/info' />;
   }
 

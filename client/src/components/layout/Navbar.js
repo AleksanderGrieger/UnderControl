@@ -1,13 +1,14 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { StyledNavbar } from '../styles/Navbar.styled';
-import { TokenContext } from '../TokenContext';
+import { AuthContext } from '../AuthContext';
 
 const Navbar = () => {
-  const { token, setToken } = useContext(TokenContext);
+  const { auth, setAuth } = useContext(AuthContext);
 
   const logout = () => {
-    setToken(null);
+    setAuth({});
+    alert('Logged out');
   };
 
   const authLinks = (
@@ -51,7 +52,7 @@ const Navbar = () => {
       <Link to='/'>
         <h1>UNDER CONTROL</h1>
       </Link>
-      {token ? authLinks : guestLinks}
+      {typeof auth === 'string' ? authLinks : guestLinks}
     </StyledNavbar>
   );
 };

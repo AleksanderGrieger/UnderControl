@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React from 'react';
 import Navbar from './components/layout/Navbar';
 import Landing from './components/layout/Landing';
 import GlobalStyles from './components/styles/Global';
@@ -6,9 +6,9 @@ import { ThemeProvider } from 'styled-components';
 import Register from './components/auth/Register';
 import Login from './components/auth/Login';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { TokenContext } from './components/TokenContext';
 import About from './components/About';
 import Contact from './components/Contact';
+import { AuthProvider } from './components/AuthContext';
 
 const theme = {
   colors: {
@@ -33,27 +33,26 @@ const theme = {
 };
 
 const App = () => {
-  const [token, setToken] = useState(null);
-  const value = useMemo(() => ({ token, setToken }), [token, setToken]);
-  // console.log('xd', value, 'xd');
   return (
-    <TokenContext.Provider value={value}>
-      <BrowserRouter>
-        <ThemeProvider theme={theme}>
-          <GlobalStyles />
-          <Navbar />
-          <section className='container'>
-            <Routes>
-              <Route path='/' element={<Landing />} />
-              <Route path='/register' element={<Register />} />
-              <Route path='/login' element={<Login />} />
-              <Route path='/info' element={<About />} />
-              <Route path='/contact' element={<Contact />} />
-            </Routes>
-          </section>
-        </ThemeProvider>
-      </BrowserRouter>
-    </TokenContext.Provider>
+    <>
+      <AuthProvider>
+        <BrowserRouter>
+          <ThemeProvider theme={theme}>
+            <GlobalStyles />
+            <Navbar />
+            <section className='container'>
+              <Routes>
+                <Route path='/' element={<Landing />} />
+                <Route path='/register' element={<Register />} />
+                <Route path='/login' element={<Login />} />
+                <Route path='/info' element={<About />} />
+                <Route path='/contact' element={<Contact />} />
+              </Routes>
+            </section>
+          </ThemeProvider>
+        </BrowserRouter>
+      </AuthProvider>
+    </>
   );
 };
 
