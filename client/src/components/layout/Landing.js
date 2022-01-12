@@ -8,7 +8,7 @@ const Landing = () => {
   const { auth } = useContext(AuthContext);
 
   if (typeof auth === 'string') {
-    return <Navigate to='/info' />;
+    return <Navigate to='/calendar' />;
   }
 
   return (

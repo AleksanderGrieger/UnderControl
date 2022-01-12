@@ -1,10 +1,10 @@
 import React from 'react';
 import { StyledCard } from '../styles/Card.styled';
 
-function Card({ children, size }) {
+function Card({ children, size, m }) {
   return (
-    <StyledCard size={size}>
-      <div>{children}</div>
+    <StyledCard size={size} m={m}>
+      <div className='card'>{children}</div>
     </StyledCard>
   );
 }

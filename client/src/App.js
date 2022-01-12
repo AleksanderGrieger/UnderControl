@@ -9,6 +9,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import About from './components/About';
 import Contact from './components/Contact';
 import { AuthProvider } from './components/AuthContext';
+import Calendar from './components/Calendar/Calendar';
 
 const theme = {
   colors: {
@@ -28,11 +29,12 @@ const theme = {
     lg: '80%',
     md: '50%',
     sm: '30%',
-    xs: '15%',
+    xs: '385px',
   },
 };
 
 const App = () => {
+  //auth ? <Caledar/> : <Landing/>
   return (
     <>
       <AuthProvider>
@@ -47,6 +49,7 @@ const App = () => {
                 <Route path='/login' element={<Login />} />
                 <Route path='/info' element={<About />} />
                 <Route path='/contact' element={<Contact />} />
+                <Route path='/calendar' element={<Calendar />} />
               </Routes>
             </section>
           </ThemeProvider>

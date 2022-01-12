@@ -14,7 +14,8 @@ export const StyledCard = styled.div`
   }};
 
   background-color: rgba(255, 255, 255, 0.5);
-  margin: 0 auto;
+  /* margin: 0 auto; */
+  margin: ${({ m }) => (m ? m : '0 auto')};
   padding: 1rem;
   background-color: rgba(255, 255, 255, 0.3);
   box-shadow: 1px 10px 25px rgba(0, 0, 0, 0.4);
@@ -22,7 +23,7 @@ export const StyledCard = styled.div`
   border-left: 1px solid rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(5px);
 
-  div {
+  div.card {
     width: 100%;
     height: 100%;
     background-color: rgba(255, 255, 255, 0.4);

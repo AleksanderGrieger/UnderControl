@@ -14,7 +14,7 @@ const Navbar = () => {
   const authLinks = (
     <ul>
       <li>
-        <Link to='/calender'>Kalendarz</Link>
+        <Link to='/calendar'>Kalendarz</Link>
       </li>
       <li>
         <Link to='/info'>O nas</Link>
