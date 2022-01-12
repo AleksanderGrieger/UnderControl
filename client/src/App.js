@@ -10,6 +10,7 @@ import About from './components/About';
 import Contact from './components/Contact';
 import { AuthProvider } from './components/AuthContext';
 import Calendar from './components/Calendar/Calendar';
+import Facilities from './components/Calendar/Facilities';
 
 const theme = {
   colors: {
@@ -49,7 +50,8 @@ const App = () => {
                 <Route path='/login' element={<Login />} />
                 <Route path='/info' element={<About />} />
                 <Route path='/contact' element={<Contact />} />
-                <Route path='/calendar' element={<Calendar />} />
+                <Route path='/calendar' element={<Facilities />} />
+                <Route path='/schedule' element={<Calendar />} />
               </Routes>
             </section>
           </ThemeProvider>

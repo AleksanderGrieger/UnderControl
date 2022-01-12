@@ -1,22 +1,49 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { SyledFacilities } from '../styles/Facilities.styled';
 import Facility from './Facility';
-import imgOrlik from '../../img/orlik.jpg';
-import imgSilownia from '../../img/silownia.jpg';
-import imgHala from '../../img/hala.jpg';
-import imgBojo from '../../img/bojo.jpg';
-import imgSalaKonf from '../../img/salaKonf.jpg';
-import imgBasen from '../../img/basen.jpg';
+import { getAllFacilities } from '../actions';
+import { AuthContext } from '../AuthContext';
+import { Navigate } from 'react-router-dom';
 
 const Facilities = () => {
+  const { auth } = useContext(AuthContext);
+  const [facilities, setFacilities] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const facilitiesFromApi = await getAllFacilities();
+      setFacilities(facilitiesFromApi);
+    };
+    fetchData();
+  }, [setFacilities]);
+
+  const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+
+  if (typeof auth != 'string') {
+    return <Navigate to='/' />;
+  }
+
   return (
     <SyledFacilities>
-      <Facility title='Orlik' img={imgOrlik} />
-      <Facility title='Siłownia' img={imgSilownia} />
-      <Facility title='Hala' img={imgHala} />
-      <Facility title='Bojo' img={imgBojo} />
-      <Facility title='Sala' img={imgSalaKonf} />
-      <Facility title='Basen' img={imgBasen} />
+      <div className='horizontalScroll'>
+        {facilities?.map((facility, index) => {
+          return (
+            <Facility
+              key={index}
+              title={capitalizeFirstLetter(facility.name)}
+              img={require(`../../img/${facility.name}.jpg`).default}
+            />
+          );
+        })}
+      </div>
+      <div className='info'>
+        <h1>
+          Wybierz jeden z obiektów aby sprawdzić jego dostępność oraz dokanać
+          rezerwacji.
+        </h1>
+      </div>
     </SyledFacilities>
   );
 };

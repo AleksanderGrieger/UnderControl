@@ -61,3 +61,13 @@ export const login = async (body) => {
 export const getAllReservations = async () => {
   return await getFromApi('/api/reservations');
 };
+
+//Get All Facilities
+export const getAllFacilities = async () => {
+  return await getFromApi('/api/facilities');
+};
+
+//Get All Reservations of specyfic Facility by name
+export const getAllReservationsOfFacility = async (name) => {
+  return await getFromApi(`/api/reservations/facility/${name}`);
+};
