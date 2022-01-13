@@ -10,9 +10,7 @@ import {
   Appointments,
   WeekView,
 } from '@devexpress/dx-react-scheduler-material-ui';
-import { alpha } from '@material-ui/core/styles';
-const moment = require('moment-timezone');
-// import moment from 'moment';
+import moment from 'moment';
 
 const Calender = () => {
   const { auth } = useContext(AuthContext);
@@ -33,32 +31,41 @@ const Calender = () => {
     return <Navigate to='/' />;
   }
 
-  const currentDate = moment().format('YYYY-MM-D');
-
-  const loadData = reservations?.map((reservation) => {
-    // if reservation.endDate < Date.now() --> nie dodawaj do loadData
-    return {
-      startDate: reservation.startDate,
-      endDate: reservation.endDate,
-      title: reservation.user.name,
-    };
-  });
-
-  console.log(loadData.length);
+  const loadData = reservations
+    ?.filter((item) => {
+      return (
+        moment(item.endDate).format('YYYY-MM-DTHH:mm') >
+        moment().subtract(3, 'day').format('YYYY-MM-DTHH:mm')
+      );
+    })
+    .map((reservation) => {
+      return {
+        startDate: reservation.startDate,
+        endDate: reservation.endDate,
+        title: reservation.user.name,
+      };
+    });
 
   if (loadData.length) {
     return (
       <>
-        {console.log(loadData)}
         <Scheduler data={loadData}>
-          <ViewState currentDate={currentDate} />
+          <ViewState currentDate={moment().format('YYYY-MM-D')} />
           <WeekView startDayHour={9} endDayHour={18} />
           <Appointments />
         </Scheduler>
       </>
     );
   } else {
-    return null;
+    return (
+      <>
+        <Scheduler data={loadData}>
+          <ViewState currentDate={moment().format('YYYY-MM-D')} />
+          <WeekView startDayHour={9} endDayHour={18} />
+          <Appointments />
+        </Scheduler>
+      </>
+    );
   }
 };
 
