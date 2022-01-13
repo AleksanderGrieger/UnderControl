@@ -45,16 +45,12 @@ const postToApi = async (path, body, config = {}) => {
 export const register = async (body) => {
   const res = await postToApi('/api/users', body, config);
   return res.token;
-  // console.log(res.token);
-  // return await loadUser(res.token);
 };
 
 // Login User
 export const login = async (body) => {
   const res = await postToApi('/api/auth', body, config);
   return res.token;
-  // console.log(res.token);
-  // return await loadUser(res.token);
 };
 
 //Get All Reservations

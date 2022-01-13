@@ -1,11 +1,12 @@
 import React, { useContext } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../AuthContext';
 import Button from '../generics/Button';
 import { StyledLanding } from '../styles/Landing.styled';
 
 const Landing = () => {
   const { auth } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   if (typeof auth === 'string') {
     return <Navigate to='/calendar' />;
@@ -17,13 +18,11 @@ const Landing = () => {
       <p>Stwórz konto lub zaloguj się aby dokonać rezerwacji</p>
       <Button
         palette={({ theme }) => theme.colors.green.main}
-        onClick={() => <Link to='/register' />}
+        onClick={() => navigate('/register')}
       >
-        <Link to='/register'>Stwórz konto</Link>
+        Stwórz konto
       </Button>
-      <Button>
-        <Link to='/login'>Zaloguj się</Link>
-      </Button>
+      <Button onClick={() => navigate('/register')}>Zaloguj się</Button>
     </StyledLanding>
   );
 };

@@ -51,7 +51,10 @@ const App = () => {
                 <Route path='/info' element={<About />} />
                 <Route path='/contact' element={<Contact />} />
                 <Route path='/calendar' element={<Facilities />} />
-                <Route path='/schedule' element={<Calendar />} />
+                <Route
+                  path={'/schedule/:facilityName'}
+                  element={<Calendar />}
+                />
               </Routes>
             </section>
           </ThemeProvider>

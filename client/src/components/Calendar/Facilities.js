@@ -7,7 +7,7 @@ import { Navigate } from 'react-router-dom';
 
 const Facilities = () => {
   const { auth } = useContext(AuthContext);
-  const [facilities, setFacilities] = useState(null);
+  const [facilities, setFacilities] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,6 +34,7 @@ const Facilities = () => {
               key={index}
               title={capitalizeFirstLetter(facility.name)}
               img={require(`../../img/${facility.name}.jpg`).default}
+              facilityName={facility.name}
             />
           );
         })}
