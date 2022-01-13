@@ -16,7 +16,7 @@ const Calender = () => {
       setReservations(reservationsFromApi);
     };
     fetchData();
-  }, [setReservations]);
+  }, [facilityName, setReservations]);
 
   if (typeof auth != 'string') {
     return <Navigate to='/' />;

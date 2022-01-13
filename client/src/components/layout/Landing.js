@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../AuthContext';
 import Button from '../generics/Button';
 import { StyledLanding } from '../styles/Landing.styled';
@@ -22,7 +22,7 @@ const Landing = () => {
       >
         Stwórz konto
       </Button>
-      <Button onClick={() => navigate('/register')}>Zaloguj się</Button>
+      <Button onClick={() => navigate('/login')}>Zaloguj się</Button>
     </StyledLanding>
   );
 };
