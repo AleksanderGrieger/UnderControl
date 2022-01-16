@@ -23,6 +23,7 @@ export const StyledNavbar = styled.nav`
   }
 
   a {
+    color: ${({ theme }) => theme.colors.main};
     font-size: 33px;
     text-decoration: none;
     margin: 0 10px;

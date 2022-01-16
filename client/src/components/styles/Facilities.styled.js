@@ -10,6 +10,7 @@ export const SyledFacilities = styled.div`
   }
 
   div.info h1 {
+    color: ${({ theme }) => theme.colors.main};
     font-size: 62px;
     margin: 5rem 0;
     text-align: center;

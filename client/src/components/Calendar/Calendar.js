@@ -2,15 +2,24 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import { getAllReservationsOfFacility } from '../actions';
 import { AuthContext } from '../AuthContext';
-
+import spiner from '../../img/spiner.gif';
 import { ViewState } from '@devexpress/dx-react-scheduler';
 import {
   Scheduler,
   DayView,
   Appointments,
   WeekView,
+  Toolbar,
+  ViewSwitcher,
+  MonthView,
+  DateNavigator,
+  TodayButton,
+  AppointmentTooltip,
+  AppointmentForm,
 } from '@devexpress/dx-react-scheduler-material-ui';
 import moment from 'moment';
+import Card from '../generics/Card';
+import { StyledCalendar } from '../styles/Calendar.styled';
 
 const Calender = () => {
   const { auth } = useContext(AuthContext);
@@ -48,23 +57,51 @@ const Calender = () => {
 
   if (loadData.length) {
     return (
-      <>
-        <Scheduler data={loadData}>
-          <ViewState currentDate={moment().format('YYYY-MM-D')} />
-          <WeekView startDayHour={9} endDayHour={18} />
-          <Appointments />
-        </Scheduler>
-      </>
+      <Card size='xl'>
+        <StyledCalendar>
+          <Scheduler data={loadData} height={660}>
+            <ViewState
+              defaultCurrentDate={moment().format('YYYY-MM-D')}
+              defaultCurrentViewName='Week'
+            />
+
+            <DayView startDayHour={9} endDayHour={20} />
+            <WeekView startDayHour={9} endDayHour={20} />
+            <MonthView />
+            <Toolbar />
+            <DateNavigator />
+            <TodayButton />
+            <ViewSwitcher />
+            <Appointments />
+            <AppointmentTooltip showCloseButton showOpenButton />
+            <AppointmentForm />
+          </Scheduler>
+        </StyledCalendar>
+      </Card>
     );
   } else {
     return (
-      <>
-        <Scheduler data={loadData}>
-          <ViewState currentDate={moment().format('YYYY-MM-D')} />
-          <WeekView startDayHour={9} endDayHour={18} />
-          <Appointments />
-        </Scheduler>
-      </>
+      <Card size='xl'>
+        <StyledCalendar>
+          <Scheduler data={loadData} height={660}>
+            <ViewState
+              defaultCurrentDate={moment().format('YYYY-MM-D')}
+              defaultCurrentViewName='Week'
+            />
+
+            <DayView startDayHour={9} endDayHour={20} />
+            <WeekView startDayHour={9} endDayHour={20} />
+            <MonthView />
+            <Toolbar />
+            <DateNavigator />
+            <TodayButton />
+            <ViewSwitcher />
+            <Appointments />
+            <AppointmentTooltip showCloseButton showOpenButton />
+            <AppointmentForm />
+          </Scheduler>
+        </StyledCalendar>
+      </Card>
     );
   }
 };

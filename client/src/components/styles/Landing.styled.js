@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 export const StyledLanding = styled.div`
+  color: ${({ theme }) => theme.colors.main};
   position: absolute;
   top: 50%;
   left: 50%;

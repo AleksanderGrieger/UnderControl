@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 
 export const StyledCard = styled.div`
+  color: ${({ theme }) => theme.colors.main};
+
   width: ${({ theme, size }) => {
     if (theme.sizes.hasOwnProperty(size)) {
       if (size === 'xl') return theme.sizes.xl;
