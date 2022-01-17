@@ -11,6 +11,7 @@ import Contact from './components/Contact';
 import { AuthProvider } from './components/AuthContext';
 import Calendar from './components/Calendar/Calendar';
 import Facilities from './components/Calendar/Facilities';
+import Reservation from './components/Reservation';
 
 const theme = {
   colors: {
@@ -54,6 +55,10 @@ const App = () => {
                 <Route
                   path={'/schedule/:facilityName'}
                   element={<Calendar />}
+                />
+                <Route
+                  path={'/reservation/:facilityName'}
+                  element={<Reservation />}
                 />
               </Routes>
             </section>

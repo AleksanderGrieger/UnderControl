@@ -6,10 +6,20 @@ const config = {
     'Content-Type': 'application/json',
   },
 };
+
 const configWithToken = (token) => {
   const config = {
     headers: {
-      //   'Content-Type': 'application/json',
+      'x-auth-token': token,
+    },
+  };
+  return config;
+};
+
+const configTypeWithToken = (token) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
       'x-auth-token': token,
     },
   };
@@ -26,7 +36,7 @@ const getFromApi = async (path, config = {}) => {
     const res = await axios.get(path, config);
     return res.data;
   } catch (error) {
-    alert(error.response.data.errors[0].msg);
+    // alert(error.response.data.errors[0].msg);
     throw error.response.data.errors;
   }
 };
@@ -36,7 +46,7 @@ const postToApi = async (path, body, config = {}) => {
     const res = await axios.post(path, body, config);
     return res.data;
   } catch (error) {
-    alert(error.response.data.errors[0].msg);
+    // alert(error.response.data.errors[0].msg);
     throw error.response.data.errors;
   }
 };
@@ -66,4 +76,14 @@ export const getAllFacilities = async () => {
 //Get All Reservations of specyfic Facility by name
 export const getAllReservationsOfFacility = async (name) => {
   return await getFromApi(`/api/reservations/facility/${name}`);
+};
+
+// Reserve User
+export const reserve = async (body, token) => {
+  const res = await postToApi(
+    '/api/reservations',
+    body,
+    configTypeWithToken(token)
+  );
+  return res;
 };

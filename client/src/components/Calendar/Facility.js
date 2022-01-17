@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 const Facility = ({ title, img, facilityName }) => {
   const navigate = useNavigate();
   const handleClick = (facilityName) => {
-    console.log(facilityName);
     navigate(`/schedule/${facilityName}`);
   };
 

@@ -21,11 +21,15 @@ const Register = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    if (password !== password2) {
-      alert('Password do not match');
-    } else {
-      const res = await register({ name, email, password });
-      await setAuth(res);
+    try {
+      if (password !== password2) {
+        alert('Password do not match');
+      } else {
+        const res = await register({ name, email, password });
+        await setAuth(res);
+      }
+    } catch (error) {
+      error.map((err) => alert(err.msg));
     }
   };
 
@@ -46,7 +50,7 @@ const Register = () => {
         />
         <input
           type='email'
-          placeholder='Aders Email'
+          placeholder='Adres Email'
           name='email'
           value={email}
           onChange={(e) => onChange(e)}

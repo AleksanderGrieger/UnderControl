@@ -1,8 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Navigate, useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { getAllReservationsOfFacility } from '../actions';
 import { AuthContext } from '../AuthContext';
-import spiner from '../../img/spiner.gif';
 import { ViewState } from '@devexpress/dx-react-scheduler';
 import {
   Scheduler,
@@ -20,11 +19,17 @@ import {
 import moment from 'moment';
 import Card from '../generics/Card';
 import { StyledCalendar } from '../styles/Calendar.styled';
+import Button from '../generics/Button';
 
 const Calender = () => {
   const { auth } = useContext(AuthContext);
   const [reservations, setReservations] = useState([]);
   const { facilityName } = useParams();
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/reservation/${facilityName}`);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,8 +60,9 @@ const Calender = () => {
       };
     });
 
-  if (loadData.length) {
-    return (
+  // if (loadData.length) {
+  return (
+    <>
       <Card size='xl'>
         <StyledCalendar>
           <Scheduler data={loadData} height={660}>
@@ -78,32 +84,37 @@ const Calender = () => {
           </Scheduler>
         </StyledCalendar>
       </Card>
-    );
-  } else {
-    return (
-      <Card size='xl'>
-        <StyledCalendar>
-          <Scheduler data={loadData} height={660}>
-            <ViewState
-              defaultCurrentDate={moment().format('YYYY-MM-D')}
-              defaultCurrentViewName='Week'
-            />
+      <Button onClick={handleClick}>Rezerwuj</Button>
+    </>
+  );
+  // } else {
+  //   return (
+  //     <>
+  //       <Card size='xl'>
+  //         <StyledCalendar>
+  //           <Scheduler data={loadData} height={660}>
+  //             <ViewState
+  //               defaultCurrentDate={moment().format('YYYY-MM-D')}
+  //               defaultCurrentViewName='Week'
+  //             />
 
-            <DayView startDayHour={9} endDayHour={20} />
-            <WeekView startDayHour={9} endDayHour={20} />
-            <MonthView />
-            <Toolbar />
-            <DateNavigator />
-            <TodayButton />
-            <ViewSwitcher />
-            <Appointments />
-            <AppointmentTooltip showCloseButton showOpenButton />
-            <AppointmentForm />
-          </Scheduler>
-        </StyledCalendar>
-      </Card>
-    );
-  }
+  //             <DayView startDayHour={9} endDayHour={20} />
+  //             <WeekView startDayHour={9} endDayHour={20} />
+  //             <MonthView />
+  //             <Toolbar />
+  //             <DateNavigator />
+  //             <TodayButton />
+  //             <ViewSwitcher />
+  //             <Appointments />
+  //             <AppointmentTooltip showCloseButton showOpenButton />
+  //             <AppointmentForm />
+  //           </Scheduler>
+  //         </StyledCalendar>
+  //       </Card>
+  //       <Button onClick={handleClick}>Rezerwuj</Button>
+  //     </>
+  //   );
+  // }
 };
 
 export default Calender;

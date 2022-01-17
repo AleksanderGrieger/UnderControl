@@ -20,8 +20,12 @@ const Login = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    const res = await login({ email, password });
-    await setAuth(res);
+    try {
+      const res = await login({ email, password });
+      await setAuth(res);
+    } catch (error) {
+      error.map((err) => alert(err.msg));
+    }
   };
 
   if (typeof auth === 'string') {
