@@ -60,10 +60,16 @@ const Calender = () => {
       };
     });
 
-  // if (loadData.length) {
+  const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+
   return (
     <>
       <Card size='xl'>
+        <h1 style={{ fontSize: '32px' }}>
+          {capitalizeFirstLetter(facilityName)}
+        </h1>
         <StyledCalendar>
           <Scheduler data={loadData} height={660}>
             <ViewState
@@ -87,34 +93,6 @@ const Calender = () => {
       <Button onClick={handleClick}>Rezerwuj</Button>
     </>
   );
-  // } else {
-  //   return (
-  //     <>
-  //       <Card size='xl'>
-  //         <StyledCalendar>
-  //           <Scheduler data={loadData} height={660}>
-  //             <ViewState
-  //               defaultCurrentDate={moment().format('YYYY-MM-D')}
-  //               defaultCurrentViewName='Week'
-  //             />
-
-  //             <DayView startDayHour={9} endDayHour={20} />
-  //             <WeekView startDayHour={9} endDayHour={20} />
-  //             <MonthView />
-  //             <Toolbar />
-  //             <DateNavigator />
-  //             <TodayButton />
-  //             <ViewSwitcher />
-  //             <Appointments />
-  //             <AppointmentTooltip showCloseButton showOpenButton />
-  //             <AppointmentForm />
-  //           </Scheduler>
-  //         </StyledCalendar>
-  //       </Card>
-  //       <Button onClick={handleClick}>Rezerwuj</Button>
-  //     </>
-  //   );
-  // }
 };
 
 export default Calender;
