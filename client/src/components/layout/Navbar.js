@@ -2,13 +2,15 @@ import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { StyledNavbar } from '../styles/Navbar.styled';
 import { AuthContext } from '../AuthContext';
+import useAPIError from '../useAPIError';
 
 const Navbar = () => {
   const { auth, setAuth } = useContext(AuthContext);
+  const { addError } = useAPIError();
 
   const logout = () => {
     setAuth({});
-    alert('Logged out');
+    addError('Logged out', false);
   };
 
   const authLinks = (

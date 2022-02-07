@@ -12,6 +12,8 @@ import { AuthProvider } from './components/AuthContext';
 import Calendar from './components/Calendar/Calendar';
 import Facilities from './components/Calendar/Facilities';
 import Reservation from './components/Reservation';
+import Alert from './components/Alert';
+import APIErrorProvider from './components/APIErrorProvider';
 
 const theme = {
   colors: {
@@ -24,6 +26,10 @@ const theme = {
       main: '#5D5D5D',
       light: '#a5a5a5',
       dark: '#000',
+    },
+    danger: {
+      main: '#e01c0d',
+      dark: '#b51a0e',
     },
   },
   sizes: {
@@ -40,30 +46,35 @@ const App = () => {
   return (
     <>
       <AuthProvider>
-        <BrowserRouter>
-          <ThemeProvider theme={theme}>
-            <GlobalStyles />
-            <Navbar />
-            <section className='container'>
-              <Routes>
-                <Route path='/' element={<Landing />} />
-                <Route path='/register' element={<Register />} />
-                <Route path='/login' element={<Login />} />
-                <Route path='/info' element={<About />} />
-                <Route path='/contact' element={<Contact />} />
-                <Route path='/calendar' element={<Facilities />} />
-                <Route
-                  path={'/schedule/:facilityName'}
-                  element={<Calendar />}
-                />
-                <Route
-                  path={'/reservation/:facilityName'}
-                  element={<Reservation />}
-                />
-              </Routes>
-            </section>
-          </ThemeProvider>
-        </BrowserRouter>
+        <APIErrorProvider>
+          <BrowserRouter>
+            <ThemeProvider theme={theme}>
+              <GlobalStyles />
+              <Navbar />
+              <section className='container'>
+                {/* <div className='alerts'> */}
+                <Alert />
+                {/* </div> */}
+                <Routes>
+                  <Route path='/' element={<Landing />} />
+                  <Route path='/register' element={<Register />} />
+                  <Route path='/login' element={<Login />} />
+                  <Route path='/info' element={<About />} />
+                  <Route path='/contact' element={<Contact />} />
+                  <Route path='/calendar' element={<Facilities />} />
+                  <Route
+                    path={'/schedule/:facilityName'}
+                    element={<Calendar />}
+                  />
+                  <Route
+                    path={'/reservation/:facilityName'}
+                    element={<Reservation />}
+                  />
+                </Routes>
+              </section>
+            </ThemeProvider>
+          </BrowserRouter>
+        </APIErrorProvider>
       </AuthProvider>
     </>
   );

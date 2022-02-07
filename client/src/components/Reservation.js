@@ -5,9 +5,11 @@ import Button from './generics/Button';
 import Card from './generics/Card';
 import moment from 'moment';
 import { loadUser, reserve } from './actions';
+import useAPIError from './useAPIError';
 
 const Reservation = () => {
   const { auth } = useContext(AuthContext);
+  const { addError } = useAPIError();
   const { facilityName } = useParams();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -40,10 +42,11 @@ const Reservation = () => {
         { userEmail, facilityName: facility, startDate, endDate },
         auth
       );
-      alert('Rrezerwacja przeszła pomyślnie!');
+      addError('Rezerwacja przeszła pomyślnie!', false);
+
       navigate(`/schedule/${facilityName}`);
     } catch (error) {
-      error.map((err) => alert(err.msg));
+      error.map((err) => addError(err.msg, true));
     }
   };
 

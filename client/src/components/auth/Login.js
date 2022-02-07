@@ -4,9 +4,11 @@ import { login } from '../actions';
 import { AuthContext } from '../AuthContext';
 import Button from '../generics/Button';
 import Card from '../generics/Card';
+import useAPIError from '../useAPIError';
 
 const Login = () => {
   const { auth, setAuth } = useContext(AuthContext);
+  const { addError } = useAPIError();
 
   const [formData, setFormData] = useState({
     email: '',
@@ -23,8 +25,11 @@ const Login = () => {
     try {
       const res = await login({ email, password });
       await setAuth(res);
+      addError('Logged in', false);
     } catch (error) {
-      error.map((err) => alert(err.msg));
+      error.map((err) => {
+        addError(err.msg, true);
+      });
     }
   };
 

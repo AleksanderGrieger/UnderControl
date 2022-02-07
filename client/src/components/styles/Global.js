@@ -30,6 +30,17 @@ const GlobalStyles = createGlobalStyle`
         margin-bottom: 3rem;
     }
 
+    .alerts{
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50%;
+        height: 50%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+    }
 `;
 
 export default GlobalStyles;

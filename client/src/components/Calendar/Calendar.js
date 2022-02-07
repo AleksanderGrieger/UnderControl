@@ -72,13 +72,14 @@ const Calender = () => {
         </h1>
         <StyledCalendar>
           <Scheduler data={loadData} height={660}>
+            {/* <Scheduler data={reservations} height={660}> */}
             <ViewState
               defaultCurrentDate={moment().format('YYYY-MM-D')}
               defaultCurrentViewName='Week'
             />
 
-            <DayView startDayHour={9} endDayHour={20} />
-            <WeekView startDayHour={9} endDayHour={20} />
+            <DayView startDayHour={9} endDayHour={22} />
+            <WeekView startDayHour={9} endDayHour={22} />
             <MonthView />
             <Toolbar />
             <DateNavigator />

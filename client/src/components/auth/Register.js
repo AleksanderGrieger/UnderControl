@@ -4,9 +4,11 @@ import { register } from '../actions';
 import { AuthContext } from '../AuthContext';
 import Button from '../generics/Button';
 import Card from '../generics/Card';
+import useAPIError from '../useAPIError';
 
 const Register = () => {
   const { auth, setAuth } = useContext(AuthContext);
+  const { addError } = useAPIError();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -23,13 +25,17 @@ const Register = () => {
     e.preventDefault();
     try {
       if (password !== password2) {
-        alert('Password do not match');
+        addError('Password do not match', true);
       } else {
         const res = await register({ name, email, password });
         await setAuth(res);
+        addError('Registered successfully', false);
       }
     } catch (error) {
-      error.map((err) => alert(err.msg));
+      error.map((err) => {
+        console.log(err.msg);
+        addError(err.msg, true);
+      });
     }
   };
 
